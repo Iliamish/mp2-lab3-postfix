@@ -32,10 +32,14 @@ public:
   }
 
   virtual void push(T object) {
+	  if (top + 1 == size)
+		  throw 0;
 	  pMem[++top] = object;
   }
 
   virtual void pop(){
+	  if (top == -1)
+		  throw 0;
 	  pMem[top--] = T();
   }
 
@@ -44,6 +48,8 @@ public:
   }
 
   virtual T back(){
+	  if (top == -1)
+		  throw 0;
 	  return pMem[top];
   }
 

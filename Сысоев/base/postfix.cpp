@@ -47,16 +47,46 @@ void TPostfix::addSpaces()
 	}
 }
 
+void TPostfix::addNullBeforeMinus()
+{
+	if(infix[0] == '-')
+		infix.insert(0, "0");
+	for (int i = 1; i < infix.length(); i++) {
+		if (infix[i] == '-' && infix[i-1] == '(') {
+			infix.insert(i - 1, "0");
+		}
+	}
+}
+
+void TPostfix::deleteSpaces()
+{
+	while (postfix.find(' ') != std::string::npos)
+	{
+		auto iter = postfix.find(' ');
+		postfix.erase(postfix.find(' '), 1);
+	}
+}
+
 
 
 string TPostfix::ToPostfix()
 {
 	string word;
+	string lastWord = "";
 	for (stringstream is(infix); is >> word;)
 	{
-		if (!isOperation(word))
+		if (!isOperation(word)){
+			if (!isOperation(lastWord) && lastWord!="")
+				throw 0;
 			postfix += word + SEPARATOR;
+		}
 		else
+		{
+			if ((isOperation(lastWord) && priority[word] != 0 && priority[lastWord] != 0) || 
+				(word != "(" && word != "-" && isSign(word[0]) && lastWord == "" ) ||
+				(lastWord == "(" && isOperation(word) && word != "-") ||
+				(word == ")" && isOperation(lastWord)))
+				throw 0;
 			if (postfix != "") {
 				if (stack.empty())
 					stack.push(word);
@@ -83,9 +113,11 @@ string TPostfix::ToPostfix()
 			}
 			else
 				if (word == "-")
-					postfix += word;					
+					postfix += word;
 				else
 					stack.push(word);
+		}
+		lastWord = word;
 	}
 	while (!stack.empty()) {
 		postfix += stack.back() + SEPARATOR;
@@ -96,15 +128,10 @@ string TPostfix::ToPostfix()
 
 double TPostfix::Calculate()
 {
-
 	int variable;
-	if (postfix[0] == '-')
-	{
-		//FIXME
-	}
 
 	TStack <double> variableStack = TStack<double>(50);
-	if (SEPARATOR != ' ') {
+	if (SEPARATOR != " ") {
 		preCalculate();
 	}
 	string word;
@@ -164,7 +191,25 @@ double TPostfix::Calculate()
 				variableStack.push(cos(back));
 				break;
 			}
-
+			case 7:
+			{
+				variableStack.push(pow(preback,back));
+				break;
+			}
+			case 8:
+			{
+				if (!variableStack.empty())
+					variableStack.push(preback);
+				variableStack.push(tan(back));
+				break;
+			}
+			case 9:
+			{
+				if (!variableStack.empty())
+					variableStack.push(preback);
+				variableStack.push(log(back));
+				break;
+			}
 			}
 		}
 	}

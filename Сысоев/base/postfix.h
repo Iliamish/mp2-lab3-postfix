@@ -1,6 +1,6 @@
 ﻿#ifndef __POSTFIX_H__
 #define __POSTFIX_H__
-#define SEPARATOR '|'
+#define SEPARATOR "|"
 
 #include <string>
 #include <map>
@@ -12,13 +12,12 @@ class TPostfix
 {
   string infix;
   string postfix;
-  bool isBreak = false;
 
-  string signs = "()+-/*";
+  string signs = "()+-/*^";
 
-  map <string, int> operations = { { "+",1 },{ "-",2 },{ "*",3 },{ "/",4 },{ "sin",5 },{ "cos",6 } };
+  map <string, int> operations = { { "+",1 },{ "-",2 },{ "*",3 },{ "/",4 },{ "sin",5 },{ "cos",6 },{"^",7}, { "tan",8 },{ "log",9 } };
 
-  map <string, int> priority = { { "+",1 },{ "-",1 },{ "*",2 },{ "/",2 },{ "(",0 },{ ")",0 },{ "sin",3 },{ "cos",3 } };
+  map <string, int> priority = { { "+",1 },{ "-",1 },{ "*",2 },{ "/",2 },{ "(",0 },{ ")",0 },{ "sin",3 },{ "cos",3 },{ "tan",3 },{ "log",3 },{ "^",2 } };
 
   TStack<string> stack = TStack<string>(50);
 
@@ -28,16 +27,22 @@ class TPostfix
 
   void preCalculate();
 
+  void addSpaces();
+
+  void addNullBeforeMinus();
+
+  void deleteSpaces();
+
 public:
-
-	void addSpaces();
-
   TPostfix()
   {
     postfix = "";
   }
   void SetInfix(string input) {
 	  infix = input;
+	  deleteSpaces();
+	  addNullBeforeMinus();
+	  addSpaces();
   }
   string GetInfix() { return infix; }
   string GetPostfix() { return postfix; }
