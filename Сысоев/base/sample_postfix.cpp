@@ -14,7 +14,7 @@ int main()
   //cout << "Введите арифметическое выражение: ";
   //cin >> expression;
   //cout << expression << endl;
-  postfix.SetInfix("log(3)");
+  postfix.SetInfix("a+a + b + c +a");
   cout << "Арифметическое выражение: " << postfix.GetInfix() << endl;
   postfix.ToPostfix();
   cout << "Постфиксная форма: " << postfix.GetPostfix() << endl;

@@ -142,8 +142,15 @@ double TPostfix::Calculate()
 				variableStack.push(stoi(word));
 			}
 			catch (std::invalid_argument& ia) {
-				cout << "Введите значение для переменной " << word << " = ";
-				cin >> variable;
+				if (variables.find(word) == variables.end()) {
+					cout << "Введите значение для переменной " << word << " = ";
+					cin >> variable;
+					variables.insert({ word, variable });
+				}
+				else
+				{
+					variable = variables[word];
+				}
 				variableStack.push(variable);
 			}
 		else {

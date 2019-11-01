@@ -19,6 +19,8 @@ class TPostfix
 
   map <string, int> priority = { { "+",1 },{ "-",1 },{ "*",2 },{ "/",2 },{ "(",0 },{ ")",0 },{ "sin",3 },{ "cos",3 },{ "tan",3 },{ "log",3 },{ "^",2 } };
 
+  map <string, int> variables;
+
   TStack<string> stack = TStack<string>(50);
 
   bool isSign(char c);
